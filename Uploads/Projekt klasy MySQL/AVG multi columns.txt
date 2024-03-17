@@ -1,0 +1,47 @@
+SELECT 
+	imiona,
+	nazwisko,
+
+#first part
+	(COALESCE(religia, 0)
+	+ COALESCE(polski, 0)
+	+ COALESCE(angielski, 0)
+	+ COALESCE(niemiecki, 0)
+	+ COALESCE(historia, 0)
+	+ COALESCE(matematyka, 0)
+	+ COALESCE(fizyka, 0)
+	+ COALESCE(chemia, 0)
+	+ COALESCE(biologia, 0)
+	+ COALESCE(geografia, 0)
+	+ COALESCE(wf, 0)
+	+ COALESCE(informatyka, 0)
+	+ COALESCE(przedsiębiorczość, 0))
+	/
+
+#second part
+	(13 -
+	(COALESCE(religia - religia, 1)
+	+ COALESCE(polski - polski, 1)
+	+ COALESCE(angielski - angielski, 1)
+	+ COALESCE(niemiecki - niemiecki, 1)
+	+ COALESCE(historia - historia, 1)
+	+ COALESCE(matematyka - matematyka, 1)
+	+ COALESCE(fizyka - fizyka, 1)
+	+ COALESCE(chemia - chemia, 1)
+	+ COALESCE(biologia - biologia, 1)
+	+ COALESCE(geografia - geografia, 1)
+	+ COALESCE(wf - wf, 1)
+	+ COALESCE(informatyka - informatyka, 1)
+	+ COALESCE(przedsiębiorczość - przedsiębiorczość, 1))
+	) AS "Średnia ocen",
+
+	zachowanie,
+
+	CASE
+		WHEN "Średnia ocen" >= 4.5 AND zachowanie = wzorowe OR "Średnia ocen" >= 4.5 AND zachowanie = 'bardzo dobre THEN "Świadectwo z wyróźnieniem"
+		ELSE "Świadectwo bez wyróżnienia"
+	END AS "Świadectwo"
+
+FROM uczniowie
+JOIN klasyfikacja ON uczniowie.id = klasyfikacja.id_ucznia
+ORDER BY 3 DESC;

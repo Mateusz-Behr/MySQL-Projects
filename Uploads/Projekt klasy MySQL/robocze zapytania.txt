@@ -1,0 +1,53 @@
+LEFT JOIN klasyfikacja ON uczniowie.id = klasyfikacja.id_ucznia
+ORDER BY 3 DESC;
+
+CASE
+		WHEN religia IS NULL AND wf IS NULL THEN
+			ROUND((religia + polski + angielski + niemiecki + historia + matematyka + fizyka + chemia + biologia + geografia + wf + informatyka + przedsiębiorczość) / 11, 2)
+		WHEN religia IS NULL AND wf IS NOT NULL OR religia IS NOT NULL and wf IS NULL THEN
+			ROUND((religia + polski + angielski + niemiecki + historia + matematyka + fizyka + chemia + biologia + geografia + wf + informatyka + przedsiębiorczość) / 12, 2)
+        WHEN NULL NOT IN (religia, wf) THEN
+			ROUND((religia + polski + angielski + niemiecki + historia + matematyka + fizyka + chemia + biologia + geografia + wf + informatyka + przedsiębiorczość) / 13, 2)
+    END AS "Średnia ocen klasyfikacyjnych"
+
+
+ROUND(AVG(religia, polski, angielski, niemiecki, historia, matematyka, fizyka, chemia, biologia, geografia, wf, informatyka, przedsiębiorczość), 2) AS "Średnia ocen klasyfikacyjnych"
+
+SELECT
+	imiona,
+	nazwisko,
+	zachowanie
+FROM
+	uczniowie
+JOIN klasyfikacja ON uczniowie.id = klasyfikacja.id_ucznia
+ORDER BY 3;
+
+SELECT
+	imiona,
+	nazwisko,
+	CASE
+		WHEN 1 NOT IN(biblioteka, pielegniarka, sport, szafka) THEN 'Świadectwo do odbioru'
+		ELSE 'Nie może odebrać świadectwa'
+	END AS 'Świadectwo'
+FROM
+	uczniowie
+JOIN zaleglosci ON uczniowie.id = zaleglosci.id_ucznia
+ORDED BY 3;
+
+
+SELECT
+	imiona,
+	nazwisko
+	IF(procent_frekwencji >= 90, 'wzorowe',
+		(IF procent_frekwencji >= 80, 'bardzo dobre',
+			(IF procent_frekwencji >= 70, 'dobre,
+				(IF procent_frekwencji >= 60, 'poprawne',
+					(IF procent_frekwencji >= 50 , 'nieodpowiednie', 'nieklasyfikowany')
+				)
+			)
+		)
+	) AS 'Cząstkowa ocena zachowania'
+FROM uczniowie
+JOIN frekwencja ON uczniowie.id = frekwencja_uczniowie.id
+ORDER BY 3 DESC;
+						
